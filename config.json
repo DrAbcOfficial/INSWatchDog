@@ -1,0 +1,71 @@
+{
+    "rcon": {
+        "ipAddress": "127.0.0.1",
+        "rconPort": 12345,
+        "passWd": "secret"
+    },
+    "message": {
+        "waitTime": 40,
+        "msgHeader": "Watchdog",
+        "msgList": [
+            "Time {time}",
+            "{bestplayer}",
+			"Player counts {player}"
+        ],
+        "format": {
+            "time": "[MM-dd-HH:mm]",
+            "noBest": "Nope",
+            "lastBest": "[{0} Score]",
+            "aiDifficult": "AI difficult change to {0}%",
+            "started": "Programe starting",
+            "leave": "{0}[{1}] left game.",
+            "join": "{0}[{1}] joined game."
+        }
+    },
+	"syncPlayerList": {
+		"waitTime": 1
+	},
+	"logWatcher": {
+		"waitTime": 1
+	},
+    "setting": {
+		"waitTime": 5,
+        "hideEmpty": true,
+        "serverName": "Super Insurgency Server Difficult: {0}",
+        "defaultCvarSets": "default",
+		"rootDir": "",
+		"excutableFile": ""
+    },
+    "difficult": {
+		"enable": true,
+        "minDifficult": 0.1,
+        "maxDifficult": 0.3,
+        "minToScale": 2,
+        "maxToScale": 8
+    },
+    "soloBot": {
+		"enable": true,
+        "fullSetPlayer": 8,
+        "minBots": 24,
+        "maxBots": 50,
+        "soloWaves": 4,
+        "soloRegain": 8
+    },
+    "ban": {
+        "kickByName": "Your name sucks",
+        "kickKeyWordFile": "KickKeyword",
+        "banPlayers": [
+            {
+                "id" : 0000000000000000,
+				"reason" : "Bbabalabalbalbal"
+            }
+        ]
+    },
+    "CVars": {
+        "defaultSets": [
+            "bEnforceFriendlyFireReflect True",
+            "MinimumTotalFriendlyFireDamageToReflect 0",
+            "TeamKillLimit 5"
+        ]
+    }
+}
