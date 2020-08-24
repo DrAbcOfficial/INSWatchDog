@@ -6,5 +6,5 @@ data class Setting(
     val hideEmpty: Boolean,
     val serverName: String,
     val rootDir: String,
-    val excutableFile: String
+    val executableFile: String
 )

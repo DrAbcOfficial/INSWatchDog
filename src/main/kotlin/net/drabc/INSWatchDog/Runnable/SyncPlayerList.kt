@@ -1,17 +1,14 @@
-package net.drabc.INSWatchDog
+package net.drabc.INSWatchDog.Runnable
 
-import kotlinx.coroutines.delay
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
 import java.lang.Exception
 
-object SyncPlayerList {
-    suspend fun run(client: RconClient) {
-        while(true) {
-            getPlayerList(client, Utility.sendCommand(client, "listplayers", true))
-            delay((Var.settingBase.syncPlayerList.waitTime * 1000).toLong())
-        }
+class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime){
+    override fun execute(client: RconClient) {
+        getPlayerList(client, Utility.sendCommand(client, "listplayers", true))
     }
 
     private fun trimStr(szTemp: String): String {
@@ -19,10 +16,10 @@ object SyncPlayerList {
     }
 
     private fun strToLong(szTemp: String): Long{
-        try{
-            return trimStr(szTemp).toLong()
+        return try{
+            trimStr(szTemp).toLong()
         }catch (e:Exception){
-            return 0
+            0
         }
     }
 
@@ -56,7 +53,7 @@ object SyncPlayerList {
             }
         }
 
-        if(!Var.playerList.equals(tempPlayerList)) {
+        if(Var.playerList != tempPlayerList) {
             //取交集
             val retireList = mutableListOf<Player>()
             Var.playerList.forEach { retireList.add(it) }

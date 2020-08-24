@@ -9,6 +9,12 @@ data class BanPlayer(
             return false
         if(other !is BanPlayer)
             return false
-        return this.id.equals(other.id)
+        return this.id == other.id
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + reason.hashCode()
+        return result
     }
 }

@@ -1,18 +1,16 @@
-package net.drabc.INSWatchDog
+package net.drabc.INSWatchDog.Runnable
 
-import kotlinx.coroutines.delay
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-object Message{
+class Message : BaseRunnable(Var.settingBase.message.waitTime){
     private var messageIndex = 0
-    suspend fun run(client: RconClient) {
-        while(true) {
-            Utility.sendMessage(client, snapString())
-            delay((Var.settingBase.message.waitTime * 1000).toLong())
-        }
+
+    override fun execute(client: RconClient) {
+        Utility.sendMessage(client, snapString())
     }
 
     private fun getRandomStr(aryList: List<String>): String {
@@ -31,7 +29,7 @@ object Message{
             )
         }
         if(tempString.contains("{bestplayer}")){
-            val tempPlayer = Var.playerList.maxBy{ p -> p.Score }
+            val tempPlayer = Var.playerList.maxBy { p -> p.Score }
             if (tempPlayer != null) {
                 tempString = tempString.replace(
                     "{bestplayer}",

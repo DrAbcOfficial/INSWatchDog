@@ -1,6 +1,6 @@
 package net.drabc.INSWatchDog.RconClient
 
-internal class RconPacket(val requestId: Int, val type: Int, val payload: ByteArray) {
+internal class RconPacket(val requestId: Int, val payload: ByteArray) {
 
     companion object {
         const val PacketExecCommand = 2

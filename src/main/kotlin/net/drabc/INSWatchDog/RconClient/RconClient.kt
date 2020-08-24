@@ -1,6 +1,6 @@
 package net.drabc.INSWatchDog.RconClient
 
-import ConnectionException
+import net.drabc.INSWatchDog.RconClient.Exceptions.ConnectionException
 import net.drabc.INSWatchDog.RconClient.Exceptions.AuthFailureException
 import net.drabc.INSWatchDog.RconClient.Exceptions.RconClientException
 import java.io.*
@@ -22,10 +22,6 @@ class RconClient {
 
     enum class Status {
         Ready, Connected, Working, Disconnected
-    }
-
-    fun getStatus(): Status {
-        return status
     }
 
     private fun setStatus(status: Status) {
@@ -88,7 +84,7 @@ class RconClient {
             val dis = DataInputStream(`in`)
             dis.readFully(payload)
             if (dis.read(ByteArray(2)) <= 0) throw RconClientException("Wrong packet received")
-            RconPacket(requestId, type, payload)
+            RconPacket(requestId, payload)
         } catch (e: BufferUnderflowException) {
             throw RconClientException("Cannot read the whole packet")
         } catch (e: EOFException) {
@@ -98,7 +94,7 @@ class RconClient {
         }
     }
 
-    fun disconnect() {
+    private fun disconnect() {
         try {
             socket!!.close()
             setStatus(Status.Disconnected)

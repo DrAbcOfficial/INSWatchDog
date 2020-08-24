@@ -1,24 +1,20 @@
-package net.drabc.INSWatchDog
+package net.drabc.INSWatchDog.Runnable
 
-import kotlinx.coroutines.delay
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
 import kotlin.math.max
 import kotlin.math.min
 
-object DifficultTweak {
+class DifficultTweak : BaseRunnable(){
     private var oldPlayerNumber : Int = 0
     private var oldDifficult : Double = 0.0
-    suspend fun run(client: RconClient) {
-        while(true) {
-            if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
-                difficultTweak(client, Var.playerList.size)
-                oldPlayerNumber = Var.playerList.size
-            }
-            delay((Var.settingBase.setting.waitTime * 1000).toLong())
+    override fun execute(client: RconClient) {
+        if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
+            difficultTweak(client, Var.playerList.size)
+            oldPlayerNumber = Var.playerList.size
         }
     }
-
     private fun difficultTweak(client: RconClient, nowPlayer: Int) {
         var flNum = Var.settingBase.difficult.maxDifficult / Var.settingBase.difficult.maxToScale * nowPlayer
         if (nowPlayer > Var.settingBase.difficult.maxToScale)
@@ -28,15 +24,22 @@ object DifficultTweak {
             flNum = min(Var.settingBase.difficult.maxDifficult, flNum)
         }
         if(oldDifficult != flNum){
-            Utility.sendCommand(client,"gamemodeproperty AIDifficulty ${flNum}")
-            Utility.sendCommand(client,
+            Utility.sendCommand(
+                client,
+                "gamemodeproperty AIDifficulty $flNum"
+            )
+            Utility.sendCommand(
+                client,
                 "gamemodeproperty ServerHostname " +
                         Var.settingBase.setting.serverName.replace(
-                            "{0}",String.format("%.1f",flNum))
+                            "{0}", String.format("%.1f", flNum)
+                        )
             )
-            Utility.sendMessage(client, Var.settingBase.message.format.aiDifficult.replace(
-                "{0}", String.format("%.2f", flNum * 100)
-            ))
+            Utility.sendMessage(
+                client, Var.settingBase.message.format.aiDifficult.replace(
+                    "{0}", String.format("%.2f", flNum * 100)
+                )
+            )
             oldDifficult = flNum
         }
     }

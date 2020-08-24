@@ -1,24 +1,21 @@
-package net.drabc.INSWatchDog
+package net.drabc.INSWatchDog.Setting
 
-import kotlinx.coroutines.delay
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Runnable.BaseRunnable
+import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
 import kotlin.math.max
 import kotlin.math.min
 
-object SoloBotTweak {
+class SoloBotTweak : BaseRunnable(){
     private var oldPlayerNumber : Int = 0
-    suspend fun run(client: RconClient) {
-        while(true) {
-            if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
-                SoloTwick(client, Var.playerList.size)
-                oldPlayerNumber = Var.playerList.size
-            }
-           delay((Var.settingBase.setting.waitTime * 1000).toLong())
+    override fun execute(client: RconClient) {
+        if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
+            soloTweak(client, Var.playerList.size)
+            oldPlayerNumber = Var.playerList.size
         }
     }
-
-    private fun SoloTwick(client: RconClient, nowPlayer: Int){
+    private fun soloTweak(client: RconClient, nowPlayer: Int){
         var intNum = Var.settingBase.soloBot.maxBots / Var.settingBase.soloBot.fullSetPlayer * nowPlayer
         if (nowPlayer > Var.settingBase.soloBot.fullSetPlayer)
             intNum = Var.settingBase.soloBot.maxBots
@@ -26,6 +23,6 @@ object SoloBotTweak {
             intNum = max(Var.settingBase.soloBot.minBots, intNum)
             intNum = min(Var.settingBase.soloBot.maxBots, intNum)
         }
-        Utility.sendCommand(client,"gamemodeproperty SoloEnemies $intNum")
+        Utility.sendCommand(client, "gamemodeproperty SoloEnemies $intNum")
     }
 }

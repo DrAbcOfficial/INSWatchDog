@@ -12,6 +12,15 @@ data class Player (
             return false
         if(other !is Player)
             return false
-        return this.NetID.equals(other.NetID)
+        return this.NetID == other.NetID
+    }
+
+    override fun hashCode(): Int {
+        var result = ID
+        result = 31 * result + Name.hashCode()
+        result = 31 * result + NetID.hashCode()
+        result = 31 * result + IP.hashCode()
+        result = 31 * result + Score.hashCode()
+        return result
     }
 }
