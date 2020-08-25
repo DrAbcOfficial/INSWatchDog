@@ -8,4 +8,5 @@ object Var {
     var playerList: MutableList<Player> = mutableListOf()
     val logger: Logger = Logger()
     var nowDifficult: Double = 0.0
+    var nowBotCount : Int = 0
 }

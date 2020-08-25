@@ -1,10 +1,10 @@
 package net.drabc.INSWatchDog.Setting
 
 data class StatueMessage(
-    val PostRound: String,
-    val RoundActive: String,
-    val RoundWon: String,
-    val RoundFailed: String,
     val GameOver: String,
-    val PreRound: String
+    val PostRound: String,
+    val PreRound: String,
+    val RoundActive: String,
+    val RoundFailed: String,
+    val RoundWon: String
 )

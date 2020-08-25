@@ -8,7 +8,7 @@ import net.drabc.INSWatchDog.Vars.Var
 open class BaseRunnable(_delayTime: Int = Var.settingBase.setting.waitTime, _forceExec: Boolean = false) {
     private var delayTime = 0
     private var forceExec = false
-    open fun execute(client: RconClient){
+    open suspend fun execute(client: RconClient){
         //Dummy
     }
     suspend fun run(client: RconClient) {

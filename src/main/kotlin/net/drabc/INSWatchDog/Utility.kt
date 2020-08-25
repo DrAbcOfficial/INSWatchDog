@@ -4,7 +4,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.DifficultTweak
 import net.drabc.INSWatchDog.Setting.SettingBase
 import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
@@ -25,7 +24,7 @@ object Utility {
         stream.buffered().reader().use { reader -> return jsonAdapter.fromJson(reader.readText()) }
     }
 
-    fun keyWordReplace(word: String): String{
+    private fun keyWordReplace(word: String): String{
         require(!word.isBlank()){Var.logger.log("输入值为空白", Logger.LogType.SEVERE)}
         var tempString = word
         if(tempString.contains("{time}")) {
@@ -39,16 +38,12 @@ object Utility {
             if (tempPlayer != null) {
                 tempString = tempString.replace(
                     "{bestplayer}",
-                    if(tempPlayer.ID != 0){
-
-                        if(tempPlayer.Score != 0.toLong()) {
-                            tempPlayer.Name +
-                                    Var.settingBase.message.format.lastBest.replace(
-                                        "{0}",
-                                        tempPlayer.Score.toString()
-                                    )
-                        }else
-                            Var.settingBase.message.format.noBest
+                    if(tempPlayer.ID != 0 && tempPlayer.Score != 0.toLong()){
+                        tempPlayer.Name +
+                                Var.settingBase.message.format.lastBest.replace(
+                                    "{0}",
+                                    tempPlayer.Score.toString()
+                                )
                     }
                     else
                         Var.settingBase.message.format.noBest)
@@ -79,9 +74,20 @@ object Utility {
         Var.logger.log("已踢出玩家: ${player.Name}[${player.NetID}]\t|\t${reason}\t|\t${player.IP}", Logger.LogType.WARN)
     }
 
-    fun sendMessage(client: RconClient, message: String){
-        sendCommand(client,"say [${Var.settingBase.message.msgHeader}] ${keyWordReplace(message)}", true)
-        Var.logger.log("已发送消息: $message")
+    fun sendMessage(client: RconClient, message: String, header: Boolean = true): Boolean{
+        return try {
+            val replacedMessage =
+                "${if(header) 
+                    "[${ net.drabc.INSWatchDog.Vars.Var.settingBase.message.msgHeader}]"
+                else
+                    ""
+                } ${keyWordReplace(message)}"
+            sendCommand(client, "say $replacedMessage", true)
+            Var.logger.log("已发送消息: $replacedMessage")
+            true
+        } catch (e:Exception){
+            false
+        }
     }
 
     fun getUserDir() : String{

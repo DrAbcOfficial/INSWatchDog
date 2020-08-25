@@ -7,7 +7,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class SoloBotTweak : BaseRunnable(){
-    override fun execute(client: RconClient) {
+    override suspend fun execute(client: RconClient) {
         if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
             soloTweak(client, Var.playerList.size)
             oldPlayerNumber = Var.playerList.size
@@ -21,13 +21,13 @@ class SoloBotTweak : BaseRunnable(){
             intNum = max(Var.settingBase.soloBot.minBots, intNum)
             intNum = min(Var.settingBase.soloBot.maxBots, intNum)
         }
-        if(oldBotNumber != intNum) {
-            oldBotNumber = intNum
+        if(Var.nowBotCount != intNum) {
+            Var.nowBotCount = intNum
             Utility.sendCommand(client, "gamemodeproperty SoloEnemies $intNum")
         }
     }
     companion object{
         private var oldPlayerNumber : Int = 0
-        private var oldBotNumber : Int = 0
+
     }
 }

@@ -7,6 +7,7 @@ data class SettingBase(
     val logWatcher: LogWatcher,
     val message: Message,
     val rcon: Rcon,
+    val saidCommand: SaidCommand,
     val setting: Setting,
     val soloBot: SoloBot,
     val syncPlayerList: SyncPlayerList

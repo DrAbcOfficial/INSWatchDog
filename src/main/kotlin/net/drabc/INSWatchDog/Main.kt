@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import net.drabc.INSWatchDog.Vars.Var
 import net.drabc.INSWatchDog.RconClient.RconClient
 import net.drabc.INSWatchDog.Runnable.*
+import net.drabc.INSWatchDog.SaidCommand.Register
 import net.drabc.INSWatchDog.Setting.SettingBase
 
 class Main {
@@ -16,8 +17,12 @@ class Main {
         }
 
         private suspend fun start() = coroutineScope {
+            //1
             Var.settingBase = Utility.parseJson("/config.json") as SettingBase
             Var.logger.log("配置文件读取完毕！", Logger.LogType.WARN)
+            //2
+            Register.registerSaidCommand()
+            //3
             try {
                 val rconClient = RconClient()
                 rconClient.connect(
