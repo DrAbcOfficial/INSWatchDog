@@ -1,14 +1,12 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.INSWatchDog.Runnable
 
 import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.BaseRunnable
 import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
 import kotlin.math.max
 import kotlin.math.min
 
 class SoloBotTweak : BaseRunnable(){
-    private var oldPlayerNumber : Int = 0
     override fun execute(client: RconClient) {
         if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
             soloTweak(client, Var.playerList.size)
@@ -23,6 +21,13 @@ class SoloBotTweak : BaseRunnable(){
             intNum = max(Var.settingBase.soloBot.minBots, intNum)
             intNum = min(Var.settingBase.soloBot.maxBots, intNum)
         }
-        Utility.sendCommand(client, "gamemodeproperty SoloEnemies $intNum")
+        if(oldBotNumber != intNum) {
+            oldBotNumber = intNum
+            Utility.sendCommand(client, "gamemodeproperty SoloEnemies $intNum")
+        }
+    }
+    companion object{
+        private var oldPlayerNumber : Int = 0
+        private var oldBotNumber : Int = 0
     }
 }

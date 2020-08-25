@@ -2,9 +2,9 @@ package net.drabc.INSWatchDog.Setting
 
 data class Setting(
     val defaultCvarSets: String,
-    val waitTime: Int,
+    val excutableFile: String,
     val hideEmpty: Boolean,
-    val serverName: String,
     val rootDir: String,
-    val executableFile: String
+    val serverName: String,
+    val waitTime: Int
 )

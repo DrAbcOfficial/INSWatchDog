@@ -5,11 +5,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.drabc.INSWatchDog.Vars.Var
 import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.DifficultTweak
-import net.drabc.INSWatchDog.Runnable.Message
-import net.drabc.INSWatchDog.Runnable.SyncPlayerList
+import net.drabc.INSWatchDog.Runnable.*
 import net.drabc.INSWatchDog.Setting.SettingBase
-import net.drabc.INSWatchDog.Setting.SoloBotTweak
 
 class Main {
     companion object {
@@ -29,6 +26,9 @@ class Main {
                     Var.settingBase.rcon.passWd
                 )
                 Utility.getMapList(rconClient)
+                launch {
+                    LogWatcher().run(rconClient)
+                }
                 launch {
                     Message().run(rconClient)
                 }

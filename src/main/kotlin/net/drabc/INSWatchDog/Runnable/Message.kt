@@ -7,10 +7,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class Message : BaseRunnable(Var.settingBase.message.waitTime){
-    private var messageIndex = 0
-
     override fun execute(client: RconClient) {
-        Utility.sendMessage(client, snapString())
+        if(Var.playerList.size > 0)
+            Utility.sendMessage(client, snapString())
     }
 
     private fun getRandomStr(aryList: List<String>): String {
@@ -55,5 +54,8 @@ class Message : BaseRunnable(Var.settingBase.message.waitTime){
             tempString = tempString.replace("{maps}", Var.mapsName.size.toString())
         }
         return tempString
+    }
+    companion object{
+        private var messageIndex = 0
     }
 }

@@ -7,8 +7,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 class DifficultTweak : BaseRunnable(){
-    private var oldPlayerNumber : Int = 0
-    private var oldDifficult : Double = 0.0
     override fun execute(client: RconClient) {
         if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
             difficultTweak(client, Var.playerList.size)
@@ -42,5 +40,9 @@ class DifficultTweak : BaseRunnable(){
             )
             oldDifficult = flNum
         }
+    }
+    companion object{
+        private var oldPlayerNumber : Int = 0
+        private var oldDifficult : Double = 0.0
     }
 }

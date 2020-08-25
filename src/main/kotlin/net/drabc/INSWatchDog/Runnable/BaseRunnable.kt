@@ -5,21 +5,26 @@ import net.drabc.INSWatchDog.Logger
 import net.drabc.INSWatchDog.RconClient.RconClient
 import net.drabc.INSWatchDog.Vars.Var
 
-open class BaseRunnable(_delayTime: Int = Var.settingBase.setting.waitTime) {
+open class BaseRunnable(_delayTime: Int = Var.settingBase.setting.waitTime, _forceExec: Boolean = false) {
     private var delayTime = 0
-    init {
-        delayTime = _delayTime
-    }
+    var forceExec = false
     open fun execute(client: RconClient){
         //Dummy
     }
     suspend fun run(client: RconClient) {
-        Var.logger.log("启动${Integer.toHexString(System.identityHashCode(this))}协程",
+        Var.logger.log("启动${this.javaClass.simpleName}协程",
             Logger.LogType.WARN
         )
         while (true) {
-            execute(client)
+            if(LogWatcher.gameStatue >= LogWatcher.GameStatues.WaitingToStart || forceExec)
+                execute(client)
+            else
+                Var.logger.log("游戏未开始，跳过执行 ${this.javaClass.name}")
             delay((delayTime * 1000).toLong())
         }
+    }
+    init {
+        delayTime = _delayTime
+        forceExec = _forceExec
     }
 }

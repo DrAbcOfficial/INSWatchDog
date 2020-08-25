@@ -86,7 +86,6 @@ class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime){
                 )
             }
         }
-
         Var.playerList = tempPlayerList
     }
 }
