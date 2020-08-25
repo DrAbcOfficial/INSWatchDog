@@ -14,7 +14,7 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
         fileStream.reader().readLines().forEach {
             //查看状态
             //无视前30个无用字符
-            val tempString = it.substring(31)
+            val tempString = it.substring(30)
             if(tempString.contains("LogGameMode: Display: State:")){
                 val gameState = tempString.split("->")[1].trim()
                 gameStatue = when(gameState){
@@ -39,7 +39,7 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                 }
             }
             if(tempString.contains("LogGameMode: Display: Round Over")){
-                val wonReason = tempString.substring(59).trim(')')
+                val wonReason = tempString.substring(58).trim(')')
                 Var.logger.log("回合结束，游戏${if(wonReason == "Objective") "胜利" else "失败"}")
                 Utility.sendMessage(client,
                     if(wonReason == "Objective")
