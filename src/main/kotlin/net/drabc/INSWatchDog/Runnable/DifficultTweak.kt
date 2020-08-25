@@ -21,7 +21,7 @@ class DifficultTweak : BaseRunnable(){
             flNum = max(Var.settingBase.difficult.minDifficult, flNum)
             flNum = min(Var.settingBase.difficult.maxDifficult, flNum)
         }
-        if(oldDifficult != flNum){
+        if(Var.nowDifficult != flNum){
             Utility.sendCommand(
                 client,
                 "gamemodeproperty AIDifficulty $flNum"
@@ -38,11 +38,10 @@ class DifficultTweak : BaseRunnable(){
                     "{0}", String.format("%.2f", flNum * 100)
                 )
             )
-            oldDifficult = flNum
+            Var.nowDifficult = flNum
         }
     }
     companion object{
         private var oldPlayerNumber : Int = 0
-        private var oldDifficult : Double = 0.0
     }
 }

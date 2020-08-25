@@ -24,10 +24,6 @@ class RconClient {
         Ready, Connected, Working, Disconnected
     }
 
-    private fun setStatus(status: Status) {
-        this.status = status
-    }
-
     fun connect(host: String, port: Int, password: String) {
         try {
             this.socket = Socket(host, port)
@@ -35,17 +31,17 @@ class RconClient {
             if (res.requestId == authFailId) {
                 throw AuthFailureException()
             }
-            setStatus(Status.Connected)
+            status = Status.Connected
         } catch (ex: IOException) {
             throw ConnectionException(ex)
         }
     }
 
-    @Throws(IOException::class)
     private fun send(type: Int, payload: ByteArray): RconPacket {
         try {
             write(socket!!.getOutputStream(), currentRequestId, type, payload)
-        } catch (se: SocketException) { // Close the socket if something happens
+        }
+        catch (se: SocketException) {
             disconnect()
             throw se
         }
@@ -54,8 +50,8 @@ class RconClient {
 
     private fun write(out: OutputStream, requestId: AtomicInteger, type: Int, payload: ByteArray) {
         try {
-            val bodyLength = getBodyLength(payload.size)
-            val packetLength = getPacketLength(bodyLength)
+            val bodyLength = 10 + payload.size
+            val packetLength = 4 + bodyLength
             val buffer = ByteBuffer.allocate(packetLength)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
             buffer.putInt(bodyLength)
@@ -66,60 +62,52 @@ class RconClient {
             buffer.put(0.toByte())
             out.write(buffer.array())
             out.flush()
-        } catch (ex: IOException) {
+        }
+        catch (ex: IOException) {
             throw ConnectionException(ex)
         }
     }
 
-    private fun read(`in`: InputStream): RconPacket {
+    private fun read(inStream: InputStream): RconPacket {
         return try {
             val header = ByteArray(4 * 3)
-            if (`in`.read(header) < 1) throw RconClientException("Wrong packet received")
+            if (inStream.read(header) < 1) throw RconClientException("Wrong packet received")
             val buffer = ByteBuffer.wrap(header)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
             val length = buffer.int
             val requestId = buffer.int
-            val type = buffer.int
+            buffer.int
             val payload = ByteArray(length - 4 - 4 - 2)
-            val dis = DataInputStream(`in`)
+            val dis = DataInputStream(inStream)
             dis.readFully(payload)
             if (dis.read(ByteArray(2)) <= 0) throw RconClientException("Wrong packet received")
             RconPacket(requestId, payload)
-        } catch (e: BufferUnderflowException) {
-            throw RconClientException("Cannot read the whole packet")
-        } catch (e: EOFException) {
-            throw RconClientException("Cannot read the whole packet")
-        } catch (ex: IOException) {
-            throw ConnectionException(ex)
         }
+        catch (e: BufferUnderflowException) { throw RconClientException("Cannot read the whole packet") }
+        catch (e: EOFException) { throw RconClientException("Cannot read the whole packet") }
+        catch (ex: IOException) { throw ConnectionException(ex) }
     }
 
     private fun disconnect() {
         try {
             socket!!.close()
-            setStatus(Status.Disconnected)
-        } catch (ex: IOException) {
+            status = Status.Disconnected
+        }
+        catch (ex: IOException) {
             throw ConnectionException(ex)
         }
     }
 
     fun sendCommand(payload: String): String {
         return try {
-            require(!(payload == null || payload.trim { it <= ' ' }.isEmpty())) { "Payload can't be null or empty" }
-            setStatus(Status.Working)
+            require(!payload.isBlank()) { "Payload can't be null or empty" }
+            status = Status.Working
             val response = send(RconPacket.PacketExecCommand, payload.toByteArray())
-            setStatus(Status.Connected)
+            status = Status.Connected
             return String(response.payload, charsets)
-        } catch (ex: IOException) {
+        }
+        catch (ex: IOException) {
             throw ConnectionException(ex)
         }
-    }
-
-    private fun getBodyLength(payloadLength: Int): Int {
-        return 4 + 4 + payloadLength + 2
-    }
-
-    private fun getPacketLength(bodyLength: Int): Int {
-        return 4 + bodyLength
     }
 }

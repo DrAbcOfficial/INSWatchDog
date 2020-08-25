@@ -7,4 +7,5 @@ object Var {
     val mapsName: MutableList<String> = mutableListOf()
     var playerList: MutableList<Player> = mutableListOf()
     val logger: Logger = Logger()
+    var nowDifficult: Double = 0.0
 }

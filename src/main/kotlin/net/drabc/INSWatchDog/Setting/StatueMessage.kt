@@ -4,5 +4,7 @@ data class StatueMessage(
     val PostRound: String,
     val RoundActive: String,
     val RoundWon: String,
-    val RoundFailed: String
+    val RoundFailed: String,
+    val GameOver: String,
+    val PreRound: String
 )
