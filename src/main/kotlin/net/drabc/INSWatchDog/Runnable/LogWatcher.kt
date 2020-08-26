@@ -69,17 +69,17 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                                     Var.settingBase.logWatcher.statueMessage.RoundFailed
                             )
                         }
-                        tempString.contains("LogChat: Display: ") -> {
+                        tempString.contains("LogChat: Display: ") && tempString.contains(") Global Chat: ") -> {
                             val tempSaid = tempString.substring(18).split(") Global Chat: ")
                             var playerSaid = ""
-                            if(tempSaid.size != 2)
-                                for(i in 1..tempSaid.size)
+                            if (tempSaid.size > 2)
+                                for (i in 1..tempSaid.size)
                                     playerSaid += tempSaid[i]
                             else
                                 playerSaid = tempSaid[1]
                             val playerID = tempSaid[0].takeLast(17).toLong()
-                            if(playerSaid.startsWith('!'))
-                                Register.execSaidCommand(client,playerSaid, Var.playerList.getPlayer(playerID))
+                            if (playerSaid.startsWith('!'))
+                                Register.execSaidCommand(client, playerSaid, Var.playerList.getPlayer(playerID))
                         }
                     }
                 }
