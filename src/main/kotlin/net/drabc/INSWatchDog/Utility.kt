@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Runnable.LogWatcher
 import net.drabc.INSWatchDog.Setting.SettingBase
 import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
@@ -62,11 +63,16 @@ object Utility {
     }
 
     fun sendCommand(client: RconClient, command: String, hide : Boolean = false): String{
-        val tempString = client.sendCommand(command)
-        if(!hide){
-            Var.logger.log("已执行命令: $tempString")
+        return try {
+            val tempString = client.sendCommand(command)
+            if (!hide) {
+                Var.logger.log("已执行命令: $tempString")
+            }
+            tempString
+        } catch (e: Exception){
+            LogWatcher.gameStatue = LogWatcher.GameStatues.Dead
+            "发送rcon命令失败${e.localizedMessage}"
         }
-        return tempString
     }
 
     fun kickPlayer(client: RconClient, player: Player, reason: String) {
@@ -78,7 +84,7 @@ object Utility {
         return try {
             val replacedMessage =
                 "${if(header) 
-                    "[${ net.drabc.INSWatchDog.Vars.Var.settingBase.message.msgHeader}]"
+                    "[${ Var.settingBase.message.msgHeader}]"
                 else
                     ""
                 } ${keyWordReplace(message)}"

@@ -1,3 +1,5 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
+
 package net.drabc.INSWatchDog.Runnable
 
 import net.drabc.INSWatchDog.RconClient.RconClient
@@ -89,6 +91,7 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
         Var.logger.log("log文件于 ${logFile.path} 不存在, 将等待下一次检查")
 
     enum class GameStatues{
+        Dead,
         GameOver,
         LeavingMap,
         EnteringMap,

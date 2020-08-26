@@ -4,6 +4,7 @@ data class SettingBase(
     val CVars: CVars,
     val ban: Ban,
     val difficult: Difficult,
+    val heartBeat: HeartBeat,
     val logWatcher: LogWatcher,
     val message: Message,
     val rcon: Rcon,

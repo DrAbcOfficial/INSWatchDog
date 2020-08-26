@@ -2,9 +2,7 @@ package net.drabc.INSWatchDog.SaidCommand
 
 import net.drabc.INSWatchDog.Logger
 import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.DifficultTweak
 import net.drabc.INSWatchDog.Runnable.LogWatcher
-import net.drabc.INSWatchDog.Runnable.SoloBotTweak
 import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
@@ -70,14 +68,14 @@ object Register {
                 Utility.sendMessage(client, "你是${pPlayer.Name}, ID是${pPlayer.ID}, SteamID是${pPlayer.NetID}, 共获得${pPlayer.Score}分")
                 return true
             },
-            "测试用途")
+            "我是谁")
         addSaidCommand(
             "gamestatue",
             fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
                 Utility.sendMessage(client, "现在游戏处于的状态是${LogWatcher.gameStatue}, 游戏难度为${Var.nowDifficult}, BOT数${Var.nowBotCount}")
                 return true
             },
-            "测试用途")
+            "游戏怎么样了")
         Var.logger.log("聊天栏命令注册完毕")
     }
 }

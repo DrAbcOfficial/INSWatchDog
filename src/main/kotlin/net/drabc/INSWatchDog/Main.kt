@@ -8,6 +8,7 @@ import net.drabc.INSWatchDog.RconClient.RconClient
 import net.drabc.INSWatchDog.Runnable.*
 import net.drabc.INSWatchDog.SaidCommand.Register
 import net.drabc.INSWatchDog.Setting.SettingBase
+import sun.awt.OSInfo
 
 class Main {
     companion object {
@@ -50,6 +51,15 @@ class Main {
                         SoloBotTweak().run(rconClient)
                     }
                 }
+                if(Var.settingBase.heartBeat.enable){
+                if (Var.systemType == OSInfo.OSType.LINUX || Var.systemType == OSInfo.OSType.WINDOWS) {
+                    launch {
+                        HeartBeatWatcher().run(rconClient)
+                    }
+                }
+                else{
+                    Var.logger.log(Var.settingBase.heartBeat.unkownOs.replace("{0}", Var.systemType.name))
+                }}
             }catch (e: Exception){
                 Var.logger.exception(e)
             }
