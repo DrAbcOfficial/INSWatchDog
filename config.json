@@ -6,35 +6,55 @@
     },
     "message": {
         "waitTime": 40,
-        "msgHeader": "Watchdog",
+        "msgHeader": "INSWatchDog",
         "msgList": [
-            "Time {time}",
-            "{bestplayer}",
-			"Player counts {player}"
+            "MessageA",
+		"MessageB"
         ],
         "format": {
             "time": "[MM-dd-HH:mm]",
-            "noBest": "Nope",
-            "lastBest": "[{0} Score]",
-            "aiDifficult": "AI difficult change to {0}%",
-            "started": "Programe starting",
-            "leave": "{0}[{1}] left game.",
-            "join": "{0}[{1}] joined game."
+            "noBest": "No best player",
+            "lastBest": "[{0} Scores]",
+            "aiDifficult": "AI difficult tweak to {0}%",
+            "started": "INSWatchDog started",
+            "leave": "{0}[{1}]left game",
+            "join": "{0}th player: [{1}]joined game"
         }
     },
 	"syncPlayerList": {
 		"waitTime": 1
 	},
 	"logWatcher": {
-		"waitTime": 1
+		"waitTime": 1,
+		"statueMessage": {
+            "RoundWon": "GG",
+            "RoundActive": "Game started",
+            "PostRound": "Game over,GGWP.",
+            "RoundFailed": "Failed",
+			"GameOver": "Changing map....",
+			"PreRound": "Be careful"
+        }
+	},
+	"saidCommand": {
+		"helpMaxLine": 3,
+		"helpMessageTop": "all commands:",
+		"helpMessageButtom": "use help {0} change page | {1} palges",
+		"helpHelpMessage": "list all commands"
+	},
+	"heartBeat":{
+		"enable": true,
+		"excutableFile": "sandstorm.sh",
+		"maxAllowDeathCount": 5,
+		"unkownOs": "unkown os{0}",
+		"localOs": "os is{0}",
+		"killGame": "game dead"
 	},
     "setting": {
 		"waitTime": 5,
         "hideEmpty": true,
-        "serverName": "Super Insurgency Server Difficult: {0}",
+        "serverName": "Ins server",
         "defaultCvarSets": "default",
-		"rootDir": "",
-		"excutableFile": ""
+		"rootDir": "/home/mc/insurgency/"
     },
     "difficult": {
 		"enable": true,
@@ -52,12 +72,12 @@
         "soloRegain": 8
     },
     "ban": {
-        "kickByName": "Your name sucks",
+        "kickByName": "You has been kicked",
         "kickKeyWordFile": "KickKeyword",
         "banPlayers": [
             {
-                "id" : 0000000000000000,
-				"reason" : "Bbabalabalbalbal"
+                "id" : 000000000000,
+		"reason" : "Sample delete this before start program"
             }
         ]
     },
@@ -65,7 +85,14 @@
         "defaultSets": [
             "bEnforceFriendlyFireReflect True",
             "MinimumTotalFriendlyFireDamageToReflect 0",
-            "TeamKillLimit 5"
+            "TeamKillLimit 5",
+            "TeamKillGrace 0.2",
+            "TeamKillReduceTime 90",
+            "bAllowFriendlyFire False",
+            "FriendlyFireModifier 1.0",
+            "FriendlyFireReflect 0.0",
+			"SupplyGainFrequency 50",
+			"bLoseWhenAllPlayersDead False"
         ]
     }
 }
