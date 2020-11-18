@@ -27,13 +27,14 @@ send message when gamestart/gameover/roundwon/roundfailed
 
 add some said command for player chat
 
-all commands have to start with `!`
+all commands must be starting with `!`
 
 |default command|usage|
 |----|----|
 |help [Page]|List all available commands|
 |me|Who am i|
-|gamestate|Current game state|
+|gamestats|Current game state|
+|rtv|Vote for changing random map|
 
 will add more commands in future...
 
@@ -61,3 +62,18 @@ monitoring game state via rcon, program will auto restart game if it is dead
 ```
 java -jar INSWatchDog.jar
 ```
+
+## Build for yourself
+1. Download or clone source from github
+
+2. Build project
+   1. IDEA
+      1. Download a IDEA
+      2. Open project in IDEA
+      3. Build -> Build Artifacts -> Build
+      4. Grab jar in out/INSWatchDog_main_jar/INSWatchDog.main.jar
+   2. Gradle
+      1. Open root directory in Shell or CMD
+      2. `./gradlew makeJar` (Linux) or `gradlew.bat makeJar` (Win)
+      3. Grab some cookies or drink a cup of tea and waiting....
+      4. Got your jar in root directory
