@@ -1,5 +1,3 @@
-import sun.applet.Main
-
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
@@ -8,7 +6,6 @@ plugins {
 }
 group 'net.drabc'
 version '1.2.1-SNAPSHOT'
-
 sourceCompatibility = 1.8
 //G O O G L E 咕噜咕噜
 repositories {
@@ -17,7 +14,7 @@ repositories {
     maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
     mavenCentral()
     jcenter()
-	google()
+    google()
 }
 //谢谢你！泰罗！
 dependencies {
@@ -27,26 +24,43 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.3'
 }
-
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin/'
 }
-
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
-
 jar {
     manifest {
         attributes 'Main-Class': 'net.drabc.inswatchdog.Main'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
-
-task makeJar(type: Copy) { 
-	from 'build/libs/' + rootProject.name + "-" + version + "-all.jar"
-    into './' 
-    delete 'build/libs/' + rootProject.name + "-" + version + "-all.jar"
-    rename (rootProject.name + "-" + version + "-all.jar", rootProject.name + '.jar')
+class MakeJarTask extends Copy {
+    static def cleanUp(String srcPath){
+        def dir = new File(System.getProperty("user.dir") + "/" + srcPath)
+        println "> 清理临时文件 $dir.path"
+        dir.deleteDir()
+        println "> 临时文件清理完毕"
+    }
 }
-makeJar.dependsOn(shadowJar) 
+task cleanJar(type: MakeJarTask) {
+    println "> 清理旧文件"
+    cleanUp('build/')
+    delete(rootProject.name + '.jar')
+}
+task copyJar(type: MakeJarTask){
+    from 'build/libs/' + rootProject.name + "-" + version + "-all.jar"
+    into './'
+    rename (rootProject.name + "-" + version + "-all.jar", rootProject.name + '.jar')
+    doLast {
+        println "> 构建完毕"
+        cleanUp('build/')
+        println '> 成功打包文件 ' + rootProject.name + '.jar'
+    }
+}
+task makeJar{
+    shadowJar.mustRunAfter(cleanJar)
+}
+shadowJar.finalizedBy(copyJar)
+makeJar.dependsOn(['shadowJar', 'cleanJar'])
