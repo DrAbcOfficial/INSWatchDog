@@ -76,4 +76,5 @@ java -jar INSWatchDog.jar
       1. Open root directory in Shell or CMD
       2. `./gradlew makeJar` (Linux) or `gradlew.bat makeJar` (Win)
       3. Grab some cookies or drink a cup of tea and waiting....
-      4. Got your jar in root directory
+      4. BUILD SUCCESSFUL in 1y6M21d18h46m3s
+      5. Got your jar in root directory
