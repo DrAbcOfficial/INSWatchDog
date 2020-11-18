@@ -4,7 +4,7 @@ import net.drabc.INSWatchDog.RconClient.RconClient
 import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
 
-class Message : BaseRunnable(Var.settingBase.message.waitTime){
+class Message : BaseRunnable(Var.settingBase.message.waitTime, true){
     override suspend fun execute(client: RconClient) {
         if(Var.playerList.size > 0)
             Utility.sendMessage(client, getRandomStr(Var.settingBase.message.msgList))

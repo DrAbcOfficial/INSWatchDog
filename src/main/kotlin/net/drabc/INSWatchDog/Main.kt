@@ -19,8 +19,18 @@ class Main {
 
         private suspend fun start() = coroutineScope {
             //1
-            Var.settingBase = Utility.parseJson("/config.json") as SettingBase
+            try{
+                Var.settingBase = Utility.parseJson("/config.json") as SettingBase
+            }
+            catch (e: Exception){
+                Var.logger.log("配置文件读取错误!", Logger.LogType.SEVERE)
+                Var.logger.exception(e)
+                Var.logger.log("程序已放弃启动", Logger.LogType.SEVERE)
+                return@coroutineScope
+            }
             Var.logger.log("配置文件读取完毕！", Logger.LogType.WARN)
+            Var.nowMaxDifficult = arrayOf(Var.settingBase.difficult.maxDifficult, Var.settingBase.difficult.minDifficult)
+            Var.logger.log("已设置log路径${Var.logger.logPath.path}")
             //2
             Register.registerSaidCommand()
             //3

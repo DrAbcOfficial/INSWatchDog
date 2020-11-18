@@ -13,7 +13,6 @@ import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
 object Utility {
     fun parseJson(name: String) : Any? {
         val moshi = Moshi.Builder()
@@ -82,22 +81,69 @@ object Utility {
 
     fun sendMessage(client: RconClient, message: String, header: Boolean = true): Boolean{
         return try {
-            val replacedMessage =
-                "${if(header) 
-                    "[${ Var.settingBase.message.msgHeader}]"
-                else
-                    ""
-                } ${keyWordReplace(message)}"
-            sendCommand(client, "say $replacedMessage", true)
-            Var.logger.log("已发送消息: $replacedMessage")
-            true
+            if(!message.isBlank()) {
+                val replacedMessage =
+                    "${
+                        if (header)
+                            "[${Var.settingBase.message.msgHeader}]"
+                        else
+                            ""
+                    } ${keyWordReplace(message)}"
+                sendCommand(client, "say $replacedMessage", true)
+                Var.logger.log("已发送消息: $replacedMessage")
+                true
+            }
+            else
+                false
         } catch (e:Exception){
             false
         }
     }
 
+    fun changeDifficult(client: RconClient, flNum: Double){
+        if(Var.nowDifficult != flNum){
+            Utility.sendCommand(
+                client,
+                "gamemodeproperty AIDifficulty $flNum"
+            )
+
+            if(Var.settingBase.difficult.renameServer) {
+                Utility.sendCommand(
+                    client,
+                    "gamemodeproperty ServerHostname " +
+                            Var.settingBase.setting.serverName.replace(
+                                "{0}", String.format("%.1f", flNum)
+                            )
+                )
+            }
+            Utility.sendMessage(
+                client, Var.settingBase.message.format.aiDifficult.replace(
+                    "{0}", String.format("%.2f", flNum * 100)
+                )
+            )
+            Var.nowDifficult = flNum
+        }
+    }
+
     fun getUserDir() : String{
         return System.getProperty("user.dir")
+    }
+
+    fun getGameStateByString(szTemp: String): LogWatcher.GameStatues{
+        return when (szTemp) {
+            "GameOver" -> LogWatcher.GameStatues.GameOver
+            "LeavingMap" -> LogWatcher.GameStatues.LeavingMap
+            "EnteringMap" -> LogWatcher.GameStatues.EnteringMap
+            "LoadingAssets" -> LogWatcher.GameStatues.LoadingAssets
+            "WaitingToStart" -> LogWatcher.GameStatues.WaitingToStart
+            "GameStarting" -> LogWatcher.GameStatues.GameStarting
+            "PreRound" -> LogWatcher.GameStatues.PreRound
+            "RoundActive" -> LogWatcher.GameStatues.RoundActive
+            "RoundWon" -> LogWatcher.GameStatues.RoundWon
+            "PostRound" -> LogWatcher.GameStatues.PostRound
+            "WaitingPostMatch" -> LogWatcher.GameStatues.WaitingPostMatch
+            else -> LogWatcher.GameStatues.Undefine
+        }
     }
 
     fun getMapList(client: RconClient){

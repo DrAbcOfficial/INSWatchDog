@@ -6,7 +6,7 @@ import net.drabc.INSWatchDog.Vars.Var
 import kotlin.math.max
 import kotlin.math.min
 
-class SoloBotTweak : BaseRunnable(){
+class SoloBotTweak : BaseRunnable(_forceExec = true){
     override suspend fun execute(client: RconClient) {
         if(oldPlayerNumber != Var.playerList.size && Var.playerList.size != 0) {
             soloTweak(client, Var.playerList.size)

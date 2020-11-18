@@ -5,6 +5,7 @@ import sun.awt.OSInfo
 
 object Var {
     lateinit var settingBase: SettingBase
+    lateinit var nowMaxDifficult: Array<Double>
     var mapsName: MutableList<String> = mutableListOf()
     var playerList: MutableList<Player> = mutableListOf()
     val logger: Logger = Logger()

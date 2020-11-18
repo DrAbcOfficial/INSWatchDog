@@ -6,7 +6,7 @@ import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
 import java.lang.Exception
 
-class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime){
+class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime, true){
     override suspend fun execute(client: RconClient) {
         getPlayerList(client, Utility.sendCommand(client, "listplayers", true))
     }

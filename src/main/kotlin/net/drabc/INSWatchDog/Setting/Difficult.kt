@@ -5,5 +5,9 @@ data class Difficult(
     val maxDifficult: Double,
     val maxToScale: Int,
     val minDifficult: Double,
-    val minToScale: Int
+    val minToScale: Int,
+    val renameServer: Boolean,
+    val failureDifficultTweak: Boolean,
+    val failureDifficultReduce: Double,
+    val failureDifficultMessage: String
 )

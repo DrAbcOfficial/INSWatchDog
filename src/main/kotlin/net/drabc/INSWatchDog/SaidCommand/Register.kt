@@ -6,11 +6,14 @@ import net.drabc.INSWatchDog.Runnable.LogWatcher
 import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Player
 import net.drabc.INSWatchDog.Vars.Var
+import java.util.*
+import kotlin.concurrent.schedule
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
 object Register {
-    private val commands: MutableMap<String, BaseSaidCommand> = mutableMapOf()
+    val commands: MutableMap<String, BaseSaidCommand> = mutableMapOf()
     private fun getSaidCommand(name: String): BaseSaidCommand?{
         return commands[name]
     }
@@ -20,13 +23,27 @@ object Register {
         helpMessage: String = "",
         argument: List<ArgumentItem> = emptyList()): Boolean{
         if(commands.containsKey(name)){
-            Var.logger.log("注册命令${name}失败, 已存在此命令", Logger.LogType.WARN)
+            Var.logger.log("注册命令${name}失败, 已存在此命令", Logger.LogType.SEVERE)
             return false
         }
         commands[name] = BaseSaidCommand(name,helpMessage,argument,doResult)
-        Var.logger.log("已注册命令${name}")
+        Var.logger.log("已注册命令${name}", Logger.LogType.FINEST)
         return true
     }
+    private fun addVoteCommand(
+        name: String,
+        doResult: (RconClient, Player, CCommand) -> Boolean,
+        helpMessage: String = "",
+        argument: List<ArgumentItem> = emptyList()): Boolean{
+        if(commands.containsKey(name)){
+            Var.logger.log("注册投票命令${name}失败, 已存在此命令", Logger.LogType.SEVERE)
+            return false
+        }
+        commands[name] = BaseVoteCommand(name,helpMessage,argument,doResult)
+        Var.logger.log("已注册投票命令${name}", Logger.LogType.FINEST)
+        return true
+    }
+
     private fun hasSaidCommand(name: String): Boolean{
         return commands.containsKey(name)
     }
@@ -43,11 +60,12 @@ object Register {
 
     fun registerSaidCommand(){
         Var.logger.log("开始注册聊天栏命令", Logger.LogType.WARN)
+
         addSaidCommand(
             "help",
             fun(client: RconClient, _:Player, arg: CCommand): Boolean{
                 var flag = true
-                val maxPage = max(1, commands.size / Var.settingBase.saidCommand.helpMaxLine)
+                val maxPage = max(1, ceil(commands.size.toDouble() / Var.settingBase.saidCommand.helpMaxLine.toDouble()).toInt())
                 val nowPage = min(if(arg.argC() < 2) 1 else max(1, arg[1].toInt()), maxPage)
                 flag = flag && Utility.sendMessage(client, Var.settingBase.saidCommand.helpMessageTop)
                 for(i in
@@ -62,6 +80,7 @@ object Register {
             },
             Var.settingBase.saidCommand.helpHelpMessage,
             listOf(ArgumentItem("Page", true)))
+
         addSaidCommand(
             "me",
             fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
@@ -69,13 +88,28 @@ object Register {
                 return true
             },
             "我是谁")
+
         addSaidCommand(
-            "gamestatue",
+            "gamestats",
             fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
-                Utility.sendMessage(client, "现在游戏处于的状态是${LogWatcher.gameStatue}, 游戏难度为${Var.nowDifficult}, BOT数${Var.nowBotCount}")
+                Utility.sendMessage(client, "现在游戏处于的状态是${LogWatcher.gameStatue}, " +
+                        "游戏难度为${Var.nowDifficult}, BOT数${Var.nowBotCount}, 已胜利${LogWatcher.winRound}次, 失败${LogWatcher.failRound}次")
                 return true
             },
             "游戏怎么样了")
+
+        addVoteCommand(
+            "rtv",
+            fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
+                val mapName = Var.settingBase.setting.rtvMapList.shuffled().take(1)[0]
+                Utility.sendMessage(client, "将在五秒后切换地图至[${mapName}]")
+                Timer().schedule(5000){
+                    Utility.sendCommand(client, "travelscenario ${mapName}")
+                }
+                return true
+            },
+            "投票随机切换地图"
+        )
         Var.logger.log("聊天栏命令注册完毕")
     }
 }

@@ -3,6 +3,7 @@
 package net.drabc.INSWatchDog.Runnable
 
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.SaidCommand.BaseVoteCommand
 import net.drabc.INSWatchDog.SaidCommand.Register
 import net.drabc.INSWatchDog.Utility
 import net.drabc.INSWatchDog.Vars.Var
@@ -22,52 +23,64 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                     val tempString = it.substring(30)
                     when {
                         tempString.contains("LogGameMode: Display: State:") -> {
-                            val gameState = tempString.split("->")[1].trim()
-                            gameStatue = when (gameState) {
-                                "GameOver" -> GameStatues.GameOver
-                                "LeavingMap" -> GameStatues.LeavingMap
-                                "EnteringMap" -> GameStatues.EnteringMap
-                                "LoadingAssets" -> GameStatues.LoadingAssets
-                                "WaitingToStart" -> GameStatues.WaitingToStart
-                                "GameStarting" -> GameStatues.GameStarting
-                                "PreRound" -> GameStatues.PreRound
-                                "RoundActive" -> GameStatues.RoundActive
-                                "RoundWon" -> GameStatues.RoundWon
-                                "PostRound" -> GameStatues.PostRound
-                                "WaitingPostMatch" -> GameStatues.WaitingPostMatch
-                                else -> GameStatues.Undefine
-                            }
+                            gameStatue = Utility.getGameStateByString(tempString.split("->")[1].trim())
                             when (gameStatue) {
                                 GameStatues.GameOver -> {
                                     Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.GameOver)
-                                    Var.playerList = mutableListOf()
                                 }
                                 GameStatues.PostRound -> Utility.sendMessage(
                                     client,
                                     Var.settingBase.logWatcher.statueMessage.PostRound
                                 )
-                                GameStatues.RoundActive -> Utility.sendMessage(
-                                    client,
-                                    Var.settingBase.logWatcher.statueMessage.RoundActive
-                                )
+                                GameStatues.RoundActive -> {
+                                    Utility.sendMessage(
+                                        client,
+                                        Var.settingBase.logWatcher.statueMessage.RoundActive
+                                    )
+                                }
                                 GameStatues.PreRound -> Utility.sendMessage(
                                     client,
                                     Var.settingBase.logWatcher.statueMessage.PreRound
                                 )
+                                GameStatues.LeavingMap -> {
+                                    winRound = 0
+                                    failRound = 0
+                                    for(command in Register.commands) {
+                                        (command as? BaseVoteCommand)?.votedPlayers = mutableListOf()
+                                    }
+                                    Var.playerList = mutableListOf()
+                                    Var.nowMaxDifficult = arrayOf(Var.settingBase.difficult.maxDifficult, Var.settingBase.difficult.minDifficult)
+                                }
                                 else -> {
-                                }//Nothing
+                                    Var.logger.log("游戏状态变为[${gameStatue}]")
+                                }
                             }
                         }
                         tempString.contains("LogGameMode: Display: Round Over") -> {
-                            val wonReason = tempString.substring(58).trim(')')
-                            Var.logger.log("回合结束，游戏${if (wonReason == "Objective") "胜利" else "失败"}")
+                            val winState = if (tempString.substring(58).trim(')') == "Objective") true else false
+                            Var.logger.log("回合结束，游戏${if (winState) "胜利" else "失败"}")
                             Utility.sendMessage(
                                 client,
-                                if (wonReason == "Objective")
+                                if (winState)
                                     Var.settingBase.logWatcher.statueMessage.RoundWon
                                 else
                                     Var.settingBase.logWatcher.statueMessage.RoundFailed
                             )
+                            if(winState){
+                                winRound++
+                            }
+                            else{
+                                failRound++
+                                if(Var.settingBase.difficult.failureDifficultTweak){
+                                    Var.nowMaxDifficult[0] *= Var.settingBase.difficult.failureDifficultReduce
+                                    Var.nowMaxDifficult[1] *= Var.settingBase.difficult.failureDifficultReduce
+                                    Var.nowDifficult *= Var.settingBase.difficult.failureDifficultReduce
+                                    Utility.changeDifficult(client, Var.nowDifficult)
+                                    Utility.sendMessage(client,
+                                        Var.settingBase.difficult.failureDifficultMessage.replace("{0}",
+                                            String.format("%.2f", Var.nowDifficult * 100)))
+                                }
+                            }
                         }
                         tempString.contains("LogChat: Display: ") && tempString.contains(") Global Chat: ") -> {
                             val tempSaid = tempString.substring(18).split(") Global Chat: ")
@@ -107,6 +120,8 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
     }
     companion object{
         var gameStatue = GameStatues.Undefine
+        var failRound: Long = 0
+        var winRound: Long = 0
         private val logFile = File(Var.settingBase.setting.rootDir + "/Insurgency/Saved/Logs/Insurgency.log")
         private var filePointer : Long = 0
     }

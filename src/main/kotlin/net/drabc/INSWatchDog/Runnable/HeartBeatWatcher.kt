@@ -8,7 +8,7 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-class HeartBeatWatcher: BaseRunnable() {
+class HeartBeatWatcher: BaseRunnable(_forceExec = true) {
     override suspend fun execute(client: RconClient) {
         if(LogWatcher.gameStatue == LogWatcher.GameStatues.Dead)
             deathCount++

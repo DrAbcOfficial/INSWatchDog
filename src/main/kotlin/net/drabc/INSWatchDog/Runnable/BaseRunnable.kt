@@ -3,11 +3,13 @@ package net.drabc.INSWatchDog.Runnable
 import kotlinx.coroutines.delay
 import net.drabc.INSWatchDog.Logger
 import net.drabc.INSWatchDog.RconClient.RconClient
+import net.drabc.INSWatchDog.Setting.Setting
+import net.drabc.INSWatchDog.Setting.SettingBase
 import net.drabc.INSWatchDog.Vars.Var
 
 open class BaseRunnable(_delayTime: Int = Var.settingBase.setting.waitTime, _forceExec: Boolean = false) {
     private var delayTime = 0
-    private var forceExec = false
+    private var forceExec = Var.settingBase.setting.forceExec
     open suspend fun execute(client: RconClient){
         //Dummy
     }
