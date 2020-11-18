@@ -1,17 +1,18 @@
-package net.drabc.INSWatchDog.SaidCommand
+package net.drabc.inswatchdog.saidcommand
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Utility
-import net.drabc.INSWatchDog.Vars.Player
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.Utility
+import net.drabc.inswatchdog.vars.Player
+import net.drabc.inswatchdog.vars.Var
 
 open class BaseVoteCommand(
     override val commandWord: String,
     override val helpMessage: String,
     override val argument: List<ArgumentItem>,
-    override val doResult: (RconClient, Player, CCommand) -> Boolean
+    override val doResult: (RconClient, Player, CCommand) -> Boolean,
+    private val votedRatio:Double = 0.6
 ): BaseSaidCommand(commandWord, helpMessage, argument, doResult) {
 
     var votedPlayers: MutableList<Player> = mutableListOf()
@@ -32,9 +33,5 @@ open class BaseVoteCommand(
                 Utility.sendMessage(client, "投票${commandWord} [${helpMessage}] ${votedPlayers.count()}/${successNum}")
             }
         }
-    }
-
-    companion object{
-        val votedRatio: Double = 0.6
     }
 }

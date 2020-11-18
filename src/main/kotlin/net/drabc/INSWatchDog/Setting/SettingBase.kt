@@ -1,15 +1,18 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class SettingBase(
-    val CVars: CVars,
-    val ban: Ban,
-    val difficult: Difficult,
-    val heartBeat: HeartBeat,
-    val logWatcher: LogWatcher,
-    val message: Message,
-    val rcon: Rcon,
-    val saidCommand: SaidCommand,
-    val setting: Setting,
-    val soloBot: SoloBot,
-    val syncPlayerList: SyncPlayerList
+    var CVars: CVars,
+    var ban: Ban,
+    var difficult: Difficult,
+    var heartBeat: HeartBeat,
+    var logWatcher: LogWatcher,
+    var message: Message,
+    var rcon: Rcon,
+    var saidCommand: SaidCommand,
+    var setting: Setting,
+    var soloBot: SoloBot,
+    var syncPlayerList: SyncPlayerList
 )

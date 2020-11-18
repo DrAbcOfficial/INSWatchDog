@@ -2,11 +2,12 @@ import sun.applet.Main
 
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "org.jetbrains.kotlin.kapt" version "1.4.10"
 }
 group 'net.drabc'
-version '1.2-SNAPSHOT'
+version '1.2.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 //G O O G L E 咕噜咕噜
@@ -16,14 +17,15 @@ repositories {
     maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
     mavenCentral()
     jcenter()
-    google()
+	google()
 }
-
+//谢谢你！泰罗！
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.10"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.3'
 }
 
 sourceSets {
@@ -36,7 +38,7 @@ compileKotlin {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'net.drabc.INSWatchDog.Main'
+        attributes 'Main-Class': 'net.drabc.inswatchdog.Main'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
@@ -44,6 +46,7 @@ jar {
 task makeJar(type: Copy) { 
 	from 'build/libs/' + rootProject.name + "-" + version + "-all.jar"
     into './' 
+    delete 'build/libs/' + rootProject.name + "-" + version + "-all.jar"
     rename (rootProject.name + "-" + version + "-all.jar", rootProject.name + '.jar')
 }
 makeJar.dependsOn(shadowJar) 

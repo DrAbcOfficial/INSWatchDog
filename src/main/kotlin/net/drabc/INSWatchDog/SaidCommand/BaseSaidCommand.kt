@@ -1,9 +1,9 @@
-package net.drabc.INSWatchDog.SaidCommand
+package net.drabc.inswatchdog.saidcommand
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Vars.Player
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.vars.Player
 
 open class BaseSaidCommand(
     override val commandWord: String,

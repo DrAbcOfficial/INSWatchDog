@@ -1,8 +1,8 @@
-package net.drabc.INSWatchDog.SaidCommand
+package net.drabc.inswatchdog.saidcommand
 
 import kotlinx.coroutines.Job
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Vars.Player
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.vars.Player
 
 interface IBaseSaidCommand{
     val commandWord: String

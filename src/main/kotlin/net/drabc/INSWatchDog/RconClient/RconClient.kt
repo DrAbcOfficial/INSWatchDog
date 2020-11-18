@@ -1,8 +1,8 @@
-package net.drabc.INSWatchDog.RconClient
+package net.drabc.inswatchdog.rconclient
 
-import net.drabc.INSWatchDog.RconClient.Exceptions.ConnectionException
-import net.drabc.INSWatchDog.RconClient.Exceptions.AuthFailureException
-import net.drabc.INSWatchDog.RconClient.Exceptions.RconClientException
+import net.drabc.inswatchdog.rconclient.Exceptions.ConnectionException
+import net.drabc.inswatchdog.rconclient.Exceptions.AuthFailureException
+import net.drabc.inswatchdog.rconclient.Exceptions.RconClientException
 import java.io.*
 import java.net.Socket
 import java.net.SocketException
@@ -99,7 +99,7 @@ class RconClient {
     }
 
     fun sendCommand(payload: String): String {
-        return try {
+        try {
             require(!payload.isBlank()) { "Payload can't be null or empty" }
             status = Status.Working
             val response = send(RconPacket.PacketExecCommand, payload.toByteArray())

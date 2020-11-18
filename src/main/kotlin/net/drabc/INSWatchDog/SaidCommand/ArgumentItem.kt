@@ -1,4 +1,4 @@
-package net.drabc.INSWatchDog.SaidCommand
+package net.drabc.inswatchdog.saidcommand
 
 data class ArgumentItem(val name: String, val optional: Boolean = false) {
     override fun equals(other: Any?): Boolean {

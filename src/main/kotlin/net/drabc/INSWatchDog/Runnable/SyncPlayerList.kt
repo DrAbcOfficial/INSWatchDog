@@ -1,9 +1,9 @@
-package net.drabc.INSWatchDog.Runnable
+package net.drabc.inswatchdog.runnable
 
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Utility
-import net.drabc.INSWatchDog.Vars.Player
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.Utility
+import net.drabc.inswatchdog.vars.Player
+import net.drabc.inswatchdog.vars.Var
 import java.lang.Exception
 
 class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime, true){

@@ -1,4 +1,4 @@
-package net.drabc.INSWatchDog.RconClient
+package net.drabc.inswatchdog.rconclient
 
 internal class RconPacket(val requestId: Int, val payload: ByteArray) {
 

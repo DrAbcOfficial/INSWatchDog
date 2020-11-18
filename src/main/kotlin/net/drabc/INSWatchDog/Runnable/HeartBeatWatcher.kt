@@ -1,8 +1,8 @@
-package net.drabc.INSWatchDog.Runnable
+package net.drabc.inswatchdog.runnable
 
-import net.drabc.INSWatchDog.Logger
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.Logger
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.vars.Var
 import sun.awt.OSInfo.OSType
 import java.io.BufferedReader
 import java.io.IOException
@@ -47,7 +47,7 @@ class HeartBeatWatcher: BaseRunnable(_forceExec = true) {
        }
     }
 
-    fun cleanVar() {
+    private fun cleanVar() {
         Var.nowDifficult = 0.0
         Var.playerList = mutableListOf()
         Var.mapsName = mutableListOf()

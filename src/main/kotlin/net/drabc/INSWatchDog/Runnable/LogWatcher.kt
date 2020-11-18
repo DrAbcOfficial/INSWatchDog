@@ -1,13 +1,13 @@
 @file:Suppress("BlockingMethodInNonBlockingContext")
 
-package net.drabc.INSWatchDog.Runnable
+package net.drabc.inswatchdog.runnable
 
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.SaidCommand.BaseVoteCommand
-import net.drabc.INSWatchDog.SaidCommand.Register
-import net.drabc.INSWatchDog.Utility
-import net.drabc.INSWatchDog.Vars.Var
-import net.drabc.INSWatchDog.Vars.getPlayer
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.saidcommand.BaseVoteCommand
+import net.drabc.inswatchdog.saidcommand.Register
+import net.drabc.inswatchdog.Utility
+import net.drabc.inswatchdog.vars.Var
+import net.drabc.inswatchdog.vars.getPlayer
 import java.io.File
 import java.io.FileInputStream
 
@@ -49,7 +49,8 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                                         (command as? BaseVoteCommand)?.votedPlayers = mutableListOf()
                                     }
                                     Var.playerList = mutableListOf()
-                                    Var.nowMaxDifficult = arrayOf(Var.settingBase.difficult.maxDifficult, Var.settingBase.difficult.minDifficult)
+                                    Var.settingBase.difficult.maxDifficult = Var.defaultSettingBase.difficult.maxDifficult
+                                    Var.settingBase.difficult.minDifficult = Var.defaultSettingBase.difficult.minDifficult
                                 }
                                 else -> {
                                     Var.logger.log("游戏状态变为[${gameStatue}]")
@@ -57,7 +58,7 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             }
                         }
                         tempString.contains("LogGameMode: Display: Round Over") -> {
-                            val winState = if (tempString.substring(58).trim(')') == "Objective") true else false
+                            val winState = tempString.substring(58).trim(')') == "Objective"
                             Var.logger.log("回合结束，游戏${if (winState) "胜利" else "失败"}")
                             Utility.sendMessage(
                                 client,
@@ -72,8 +73,8 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             else{
                                 failRound++
                                 if(Var.settingBase.difficult.failureDifficultTweak){
-                                    Var.nowMaxDifficult[0] *= Var.settingBase.difficult.failureDifficultReduce
-                                    Var.nowMaxDifficult[1] *= Var.settingBase.difficult.failureDifficultReduce
+                                    Var.settingBase.difficult.maxDifficult *= Var.settingBase.difficult.failureDifficultReduce
+                                    Var.settingBase.difficult.minDifficult *= Var.settingBase.difficult.failureDifficultReduce
                                     Var.nowDifficult *= Var.settingBase.difficult.failureDifficultReduce
                                     Utility.changeDifficult(client, Var.nowDifficult)
                                     Utility.sendMessage(client,

@@ -1,10 +1,13 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class HeartBeat(
-    val enable: Boolean,
-    val excutableFile: String,
-    val maxAllowDeathCount: Int,
-    val unkownOs: String,
-    val localOs: String,
-    val killGame: String
+    var enable: Boolean = false,
+    var excutableFile: String = "sandstorm.sh",
+    var maxAllowDeathCount: Int = 3,
+    var unkownOs: String = "Unknown OS {0}, abandon executing",
+    var localOs: String = "Local OS is {0}",
+    var killGame: String = "Game process dead, killing..."
 )

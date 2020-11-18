@@ -1,11 +1,9 @@
-package net.drabc.INSWatchDog.Runnable
+package net.drabc.inswatchdog.runnable
 
 import kotlinx.coroutines.delay
-import net.drabc.INSWatchDog.Logger
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Setting.Setting
-import net.drabc.INSWatchDog.Setting.SettingBase
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.Logger
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.vars.Var
 
 open class BaseRunnable(_delayTime: Int = Var.settingBase.setting.waitTime, _forceExec: Boolean = false) {
     private var delayTime = 0

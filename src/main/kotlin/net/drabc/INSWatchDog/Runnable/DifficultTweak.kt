@@ -1,8 +1,8 @@
-package net.drabc.INSWatchDog.Runnable
+package net.drabc.inswatchdog.runnable
 
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Utility
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.Utility
+import net.drabc.inswatchdog.vars.Var
 import kotlin.math.max
 import kotlin.math.min
 
@@ -14,12 +14,12 @@ class DifficultTweak : BaseRunnable(_forceExec = true){
         }
     }
     private fun difficultTweak(client: RconClient, nowPlayer: Int) {
-        var flNum = Var.nowMaxDifficult[0] / Var.settingBase.difficult.maxToScale * nowPlayer
+        var flNum = Var.settingBase.difficult.maxDifficult / Var.settingBase.difficult.maxToScale * nowPlayer
         if (nowPlayer > Var.settingBase.difficult.maxToScale)
-            flNum = Var.nowMaxDifficult[0]
+            flNum = Var.settingBase.difficult.maxDifficult
         else {
-            flNum = max(Var.nowMaxDifficult[1], flNum)
-            flNum = min(Var.nowMaxDifficult[0], flNum)
+            flNum = max(Var.settingBase.difficult.minDifficult, flNum)
+            flNum = min(Var.settingBase.difficult.maxDifficult, flNum)
         }
         Utility.changeDifficult(client, flNum)
     }

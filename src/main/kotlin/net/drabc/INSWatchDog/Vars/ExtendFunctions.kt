@@ -1,4 +1,4 @@
-package net.drabc.INSWatchDog.Vars
+package net.drabc.inswatchdog.vars
 
 fun MutableList<Player>.getPlayer(netID: Long): Player?{
     forEach {

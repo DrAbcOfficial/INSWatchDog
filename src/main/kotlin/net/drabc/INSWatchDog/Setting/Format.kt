@@ -1,11 +1,14 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class Format(
-    val aiDifficult: String,
-    val join: String,
-    val lastBest: String,
-    val leave: String,
-    val noBest: String,
-    val started: String,
-    val time: String
+    var aiDifficult: String,
+    var join: String,
+    var lastBest: String,
+    var leave: String,
+    var noBest: String,
+    var started: String,
+    var time: String
 )

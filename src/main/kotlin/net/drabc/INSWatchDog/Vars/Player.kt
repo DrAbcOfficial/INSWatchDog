@@ -1,4 +1,4 @@
-package net.drabc.INSWatchDog.Vars
+package net.drabc.inswatchdog.vars
 
 data class Player (
     var ID: Int = 0,

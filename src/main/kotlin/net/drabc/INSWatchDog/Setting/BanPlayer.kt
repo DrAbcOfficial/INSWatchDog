@@ -1,6 +1,9 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class BanPlayer(
-    val id: Long,
-    val reason: String
+    var id: Long,
+    var reason: String
 )

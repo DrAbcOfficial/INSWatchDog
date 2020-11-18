@@ -1,5 +1,8 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class SyncPlayerList(
-    val waitTime: Int
+    var waitTime: Int = 1
 )

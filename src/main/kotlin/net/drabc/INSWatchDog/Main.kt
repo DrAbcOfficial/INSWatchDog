@@ -1,14 +1,18 @@
-package net.drabc.INSWatchDog
+package net.drabc.inswatchdog
 
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.drabc.INSWatchDog.Vars.Var
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.*
-import net.drabc.INSWatchDog.SaidCommand.Register
-import net.drabc.INSWatchDog.Setting.SettingBase
+import net.drabc.inswatchdog.vars.Var
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.runnable.*
+import net.drabc.inswatchdog.saidcommand.Register
+import net.drabc.inswatchdog.setting.SettingBase
 import sun.awt.OSInfo
+import java.io.FileWriter
+import java.nio.file.Paths
+import kotlin.system.exitProcess
 
 class Main {
     companion object {
@@ -19,17 +23,30 @@ class Main {
 
         private suspend fun start() = coroutineScope {
             //1
+            val configFile = Paths.get( "${Utility.getUserDir()}/config.json").toFile()
             try{
-                Var.settingBase = Utility.parseJson("/config.json") as SettingBase
+
+                if(configFile.exists())
+                    Var.settingBase = Utility.parseJson(configFile.path) as SettingBase
+                else{
+                    Var.logger.log("配置文件不存在, 将于${configFile.path}生成默认配置\n请修改后重启程序!", Logger.LogType.SEVERE)
+                    configFile.createNewFile()
+                    FileWriter(configFile, false).use{
+                        it.write(Moshi.Builder().build().adapter(SettingBase::class.java).toJson(Utility.getEmptySettingBase()))
+                    }
+                    Utility.pressKeytoContinue()
+                    exitProcess(-1)
+                }
             }
             catch (e: Exception){
                 Var.logger.log("配置文件读取错误!", Logger.LogType.SEVERE)
                 Var.logger.exception(e)
                 Var.logger.log("程序已放弃启动", Logger.LogType.SEVERE)
-                return@coroutineScope
+                Utility.pressKeytoContinue()
+                exitProcess(-1)
             }
             Var.logger.log("配置文件读取完毕！", Logger.LogType.WARN)
-            Var.nowMaxDifficult = arrayOf(Var.settingBase.difficult.maxDifficult, Var.settingBase.difficult.minDifficult)
+            Var.defaultSettingBase = Var.settingBase
             Var.logger.log("已设置log路径${Var.logger.logPath.path}")
             //2
             Register.registerSaidCommand()

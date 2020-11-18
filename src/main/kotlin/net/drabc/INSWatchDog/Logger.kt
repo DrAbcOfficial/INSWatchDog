@@ -1,4 +1,4 @@
-package net.drabc.INSWatchDog
+package net.drabc.inswatchdog
 
 import java.io.File
 import java.io.FileWriter
@@ -59,9 +59,7 @@ class Logger {
             logPath.parentFile.mkdirs()
         if(!logPath.exists())
             logPath.createNewFile()
-        val fw = FileWriter(logPath, true)
-        fw.write(snapLog(message, type) + "\n")
-        fw.close()
+        FileWriter(logPath, true).use { it.write(snapLog(message, type) + "\n") }
     }
     fun exception(e: Exception){
         var tempString = "Cautch a exception->\n\tMessage: ${e.localizedMessage}\n" +

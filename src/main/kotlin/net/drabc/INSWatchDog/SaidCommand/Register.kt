@@ -1,11 +1,11 @@
-package net.drabc.INSWatchDog.SaidCommand
+package net.drabc.inswatchdog.saidcommand
 
-import net.drabc.INSWatchDog.Logger
-import net.drabc.INSWatchDog.RconClient.RconClient
-import net.drabc.INSWatchDog.Runnable.LogWatcher
-import net.drabc.INSWatchDog.Utility
-import net.drabc.INSWatchDog.Vars.Player
-import net.drabc.INSWatchDog.Vars.Var
+import net.drabc.inswatchdog.Logger
+import net.drabc.inswatchdog.rconclient.RconClient
+import net.drabc.inswatchdog.runnable.LogWatcher
+import net.drabc.inswatchdog.Utility
+import net.drabc.inswatchdog.vars.Player
+import net.drabc.inswatchdog.vars.Var
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.ceil
@@ -91,7 +91,7 @@ object Register {
 
         addSaidCommand(
             "gamestats",
-            fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
+            fun(client: RconClient, _:Player, _: CCommand): Boolean{
                 Utility.sendMessage(client, "现在游戏处于的状态是${LogWatcher.gameStatue}, " +
                         "游戏难度为${Var.nowDifficult}, BOT数${Var.nowBotCount}, 已胜利${LogWatcher.winRound}次, 失败${LogWatcher.failRound}次")
                 return true
@@ -100,11 +100,11 @@ object Register {
 
         addVoteCommand(
             "rtv",
-            fun(client: RconClient, pPlayer:Player, _: CCommand): Boolean{
+            fun(client: RconClient, _:Player, _: CCommand): Boolean{
                 val mapName = Var.settingBase.setting.rtvMapList.shuffled().take(1)[0]
                 Utility.sendMessage(client, "将在五秒后切换地图至[${mapName}]")
                 Timer().schedule(5000){
-                    Utility.sendCommand(client, "travelscenario ${mapName}")
+                    Utility.sendCommand(client, "travelscenario $mapName")
                 }
                 return true
             },

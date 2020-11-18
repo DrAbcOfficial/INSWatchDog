@@ -1,10 +1,13 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class SoloBot(
-    val enable: Boolean,
-    val fullSetPlayer: Int,
-    val maxBots: Int,
-    val minBots: Int,
-    val soloRegain: Int,
-    val soloWaves: Int
+    var enable: Boolean = false,
+    var fullSetPlayer: Int = 8,
+    var maxBots: Int = 100,
+    var minBots: Int = 1,
+    var soloRegain: Int = 50,
+    var soloWaves: Int = 666
 )

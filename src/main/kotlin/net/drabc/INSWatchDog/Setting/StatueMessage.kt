@@ -1,10 +1,13 @@
-package net.drabc.INSWatchDog.Setting
+package net.drabc.inswatchdog.setting
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class StatueMessage(
-    val GameOver: String,
-    val PostRound: String,
-    val PreRound: String,
-    val RoundActive: String,
-    val RoundFailed: String,
-    val RoundWon: String
+    var GameOver: String,
+    var PostRound: String,
+    var PreRound: String,
+    var RoundActive: String,
+    var RoundFailed: String,
+    var RoundWon: String
 )
