@@ -1,5 +1,6 @@
 # INSWatchDog
  Add some functions to insurgency:sandstorm
+ chat commands, roll message, difficult tweak by players number, solo mode bot tweak, game dummy death bug cheack or etc.
 
  ## Message
 
