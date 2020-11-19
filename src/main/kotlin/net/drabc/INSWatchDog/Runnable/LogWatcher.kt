@@ -24,24 +24,12 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                     when {
                         tempString.contains("LogGameMode: Display: State:") -> {
                             gameStatue = Utility.getGameStateByString(tempString.split("->")[1].trim())
+                            Var.logger.log("游戏状态变为[${gameStatue}]")
                             when (gameStatue) {
-                                GameStatues.GameOver -> {
-                                    Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.GameOver)
-                                }
-                                GameStatues.PostRound -> Utility.sendMessage(
-                                    client,
-                                    Var.settingBase.logWatcher.statueMessage.PostRound
-                                )
-                                GameStatues.RoundActive -> {
-                                    Utility.sendMessage(
-                                        client,
-                                        Var.settingBase.logWatcher.statueMessage.RoundActive
-                                    )
-                                }
-                                GameStatues.PreRound -> Utility.sendMessage(
-                                    client,
-                                    Var.settingBase.logWatcher.statueMessage.PreRound
-                                )
+                                GameStatues.GameOver -> Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.GameOver)
+                                GameStatues.PostRound -> Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.PostRound)
+                                GameStatues.RoundActive -> Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.RoundActive)
+                                GameStatues.PreRound -> Utility.sendMessage(client, Var.settingBase.logWatcher.statueMessage.PreRound)
                                 GameStatues.LeavingMap -> {
                                     winRound = 0
                                     failRound = 0
@@ -52,9 +40,7 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                                     Var.settingBase.difficult.maxDifficult = Var.defaultSettingBase.difficult.maxDifficult
                                     Var.settingBase.difficult.minDifficult = Var.defaultSettingBase.difficult.minDifficult
                                 }
-                                else -> {
-                                    Var.logger.log("游戏状态变为[${gameStatue}]")
-                                }
+                                else -> { }
                             }
                         }
                         tempString.contains("LogGameMode: Display: Round Over") -> {
