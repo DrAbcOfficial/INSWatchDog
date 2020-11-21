@@ -5,7 +5,7 @@ import sun.awt.OSInfo
 
 object Var {
     lateinit var settingBase: SettingBase
-    lateinit var defaultSettingBase: SettingBase
+    val defaultSettingBase: SettingBase by lazy { settingBase.copy() }
     var mapsName: MutableList<String> = mutableListOf()
     var playerList: MutableList<Player> = mutableListOf()
     val logger: Logger = Logger()

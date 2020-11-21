@@ -45,7 +45,6 @@ class Main {
                 Utility.pressKeytoContinue()
                 exitProcess(-1)
             }
-            Var.defaultSettingBase = Var.settingBase.copy()
             Var.logger.log("配置文件读取完毕！", Logger.LogType.WARN)
             Var.logger.log("已设置log路径${Var.logger.logPath.path}")
             //2
