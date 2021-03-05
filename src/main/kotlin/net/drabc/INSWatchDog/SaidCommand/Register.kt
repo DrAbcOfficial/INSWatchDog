@@ -73,7 +73,7 @@ object Register {
                     min(commands.size, nowPage*Var.settingBase.saidCommand.helpMaxLine)){
                     flag = flag && Utility.sendMessage(client, commands.toList()[i].second.getHelpInfo(), false)
                 }
-                flag = flag && Utility.sendMessage(client, "\n${Var.settingBase.saidCommand.helpMessageButtom
+                flag = flag && Utility.sendMessage(client, "\n${Var.settingBase.saidCommand.helpMessageBottom
                         .replace("{0}", (nowPage+1).toString())
                         .replace("{1}",maxPage.toString())}", false)
                 return flag

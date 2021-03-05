@@ -190,7 +190,7 @@ object Utility {
         )
     }
 
-    fun pressKeytoContinue() {
+    fun pressKeystoreContinue() {
         print("按任意键继续")
         Scanner(System.`in`).nextLine()
     }

@@ -9,9 +9,9 @@ import net.drabc.inswatchdog.rconclient.RconClient
 import net.drabc.inswatchdog.runnable.*
 import net.drabc.inswatchdog.saidcommand.Register
 import net.drabc.inswatchdog.setting.SettingBase
-import sun.awt.OSInfo
 import java.io.FileWriter
 import java.nio.file.Paths
+import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 class Main {
@@ -30,11 +30,14 @@ class Main {
                     Var.settingBase = Utility.parseJson(configFile.path) as SettingBase
                 else{
                     Var.logger.log("配置文件不存在, 将于${configFile.path}生成默认配置\n请修改后重启程序!", Logger.LogType.SEVERE)
-                    configFile.createNewFile()
-                    FileWriter(configFile, false).use{
-                        it.write(Moshi.Builder().build().adapter(SettingBase::class.java).toJson(Utility.getEmptySettingBase()))
+                    thread(true) {
+                            configFile.createNewFile()
+                            FileWriter(configFile, false).use {
+                                it.write(Moshi.Builder().build().adapter(SettingBase::class.java).toJson(Utility.getEmptySettingBase()))
+                            }
+                        Var.logger.log("已保存${configFile.path}")
                     }
-                    Utility.pressKeytoContinue()
+                    Utility.pressKeystoreContinue()
                     exitProcess(-1)
                 }
             }
@@ -42,7 +45,7 @@ class Main {
                 Var.logger.log("配置文件读取错误!", Logger.LogType.SEVERE)
                 Var.logger.exception(e)
                 Var.logger.log("程序已放弃启动", Logger.LogType.SEVERE)
-                Utility.pressKeytoContinue()
+                Utility.pressKeystoreContinue()
                 exitProcess(-1)
             }
             Var.logger.log("配置文件读取完毕！", Logger.LogType.WARN)
@@ -78,13 +81,13 @@ class Main {
                     }
                 }
                 if(Var.settingBase.heartBeat.enable){
-                if (Var.systemType == OSInfo.OSType.LINUX || Var.systemType == OSInfo.OSType.WINDOWS) {
+                if (Var.osType == OS.LINUX || Var.osType == OS.LINUX ) {
                     launch {
                         HeartBeatWatcher().run(rconClient)
                     }
                 }
                 else{
-                    Var.logger.log(Var.settingBase.heartBeat.unkownOs.replace("{0}", Var.systemType.name))
+                    Var.logger.log(Var.settingBase.heartBeat.unknownOs.replace("{0}", Var.osType.toString()))
                 }}
             }catch (e: Exception){
                 Var.logger.exception(e)

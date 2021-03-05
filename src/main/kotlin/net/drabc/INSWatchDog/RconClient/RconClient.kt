@@ -74,10 +74,10 @@ class RconClient {
             if (inStream.read(header) < 1) throw RconClientException("Wrong packet received")
             val buffer = ByteBuffer.wrap(header)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            val length = buffer.int
+            val length = buffer.int  - 4 - 4 - 2
+            if (length < 0) throw RconClientException("Receive rcon length < 0")
             val requestId = buffer.int
-            buffer.int
-            val payload = ByteArray(length - 4 - 4 - 2)
+            val payload = ByteArray(length)
             val dis = DataInputStream(inStream)
             dis.readFully(payload)
             if (dis.read(ByteArray(2)) <= 0) throw RconClientException("Wrong packet received")
@@ -100,7 +100,7 @@ class RconClient {
 
     fun sendCommand(payload: String): String {
         try {
-            require(!payload.isBlank()) { "Payload can't be null or empty" }
+            require(payload.isNotBlank()) { "Payload can't be null or empty" }
             status = Status.Working
             val response = send(RconPacket.PacketExecCommand, payload.toByteArray())
             status = Status.Connected

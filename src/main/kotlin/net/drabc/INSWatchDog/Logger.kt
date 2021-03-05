@@ -62,7 +62,7 @@ class Logger {
         FileWriter(logPath, true).use { it.write(snapLog(message, type) + "\n") }
     }
     fun exception(e: Exception){
-        var tempString = "Cautch a exception->\n\tMessage: ${e.localizedMessage}\n" +
+        var tempString = "Catch a exception->\n\tMessage: ${e.localizedMessage}\n" +
                 "\tCause ${e.cause.toString()}\n" +
                 "\tJavaClass: ${e.javaClass}\n\tSuppressed: \n"
         e.suppressed.forEach {
