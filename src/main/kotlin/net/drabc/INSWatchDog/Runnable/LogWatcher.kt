@@ -56,8 +56,8 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             if(winState){
                                 winRound++
                                 if(Var.settingBase.difficult.failureDifficultTweak){
-                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtMost(
-                                        Var.settingBase.difficult.minDifficult.coerceAtLeast(Var.nowDifficult + Var.settingBase.difficult.failureDifficultReduce)
+                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtLeast(
+                                        Var.settingBase.difficult.minDifficult.coerceAtMost(Var.nowDifficult + Var.settingBase.difficult.failureDifficultReduce)
                                     )
                                     Utility.changeDifficult(client, Var.nowDifficult)
                                     Utility.sendMessage(client,
@@ -68,8 +68,8 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             else{
                                 failRound++
                                 if(Var.settingBase.difficult.failureDifficultTweak){
-                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtMost(
-                                        Var.settingBase.difficult.minDifficult.coerceAtLeast(Var.nowDifficult - Var.settingBase.difficult.failureDifficultReduce)
+                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtLeast(
+                                        Var.settingBase.difficult.minDifficult.coerceAtMost(Var.nowDifficult - Var.settingBase.difficult.failureDifficultReduce)
                                     )
                                     Utility.changeDifficult(client, Var.nowDifficult)
                                     Utility.sendMessage(client,
@@ -81,10 +81,18 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                         tempString.contains("LogChat: Display: ") && tempString.contains(") Global Chat: ") -> {
                             val regex = Regex("""LogChat: Display:.*\([0-9]+\) Global Chat: """)
                             val playerSaid = regex.replace(tempString, "")
-                            val playerInfo = regex.find(tempString).toString()
-                            val playerID = playerInfo.substring(playerInfo.length - 46, playerInfo.length - 14).toLong()
-                            if (playerSaid.startsWith('!'))
-                                Register.execSaidCommand(client, playerSaid, Var.playerList.getPlayer(playerID))
+                            val playerInfo = regex.find(tempString)!!.value
+                            val playerID = playerInfo.substring(playerInfo.length - 32, playerInfo.length - 15).toLong()
+                            if (playerSaid.startsWith('!')){
+                                //Register.execSaidCommand(client, playerSaid, Var.playerList.getPlayer(playerID))
+                                for(it in Var.playerList){
+                                    if(it.NetID == playerID){
+                                        Register.execSaidCommand(client, playerSaid, it)
+                                        break
+                                    }
+                                }
+                                //Register.execSaidCommand(client, playerSaid, Var.playerList.getPlayer(playerID))
+                            }
                         }
                     }
                 }

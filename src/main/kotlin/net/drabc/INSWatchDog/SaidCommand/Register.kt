@@ -33,7 +33,7 @@ object Register {
     private fun addVoteCommand(
         name: String,
         doResult: (RconClient, Player, CCommand) -> Boolean,
-        helpMessage: String = "",
+        helpMessage: String,
         argument: List<ArgumentItem> = emptyList()): Boolean{
         if(commands.containsKey(name)){
             Var.logger.log("注册投票命令${name}失败, 已存在此命令", Logger.LogType.SEVERE)

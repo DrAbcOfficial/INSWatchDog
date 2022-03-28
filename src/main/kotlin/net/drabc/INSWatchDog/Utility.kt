@@ -23,7 +23,7 @@ object Utility {
     }
 
     private fun keyWordReplace(word: String): String{
-        require(!word.isBlank()){Var.logger.log("输入值为空白", Logger.LogType.SEVERE)}
+        require(word.isNotBlank()){Var.logger.log("输入值为空白", Logger.LogType.SEVERE)}
         var tempString = word
         if(tempString.contains("{time}")) {
             tempString = tempString.replace(
@@ -79,7 +79,7 @@ object Utility {
 
     fun sendMessage(client: RconClient, message: String, header: Boolean = true): Boolean{
         return try {
-            if(!message.isBlank()) {
+            if(message.isNotBlank()) {
                 val replacedMessage =
                     "${
                         if (header)
@@ -141,7 +141,7 @@ object Utility {
 
     fun getMapList(client: RconClient){
         sendCommand(client, "maps", true).split('\n').forEach{
-            if(!it.isBlank())
+            if(it.isNotBlank())
                 Var.mapsName.add(it.trim())
         }
     }
