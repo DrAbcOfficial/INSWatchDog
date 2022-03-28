@@ -5,7 +5,7 @@ enum class OS {
 }
 
 fun getOS(): OS {
-    val os = System.getProperty("os.name").toLowerCase()
+    val os = System.getProperty("os.name").lowercase()
     return when {
         os.contains("win") -> {
             OS.WINDOWS

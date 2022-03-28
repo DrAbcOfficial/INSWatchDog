@@ -14,8 +14,8 @@ import java.io.FileInputStream
 class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
     override suspend fun execute(client: RconClient) = if(logFile.exists() && logFile.canRead()){
         FileInputStream(logFile).run{
-            this.skip(filePointer)
-            filePointer = logFile.length()
+            this.skip(filePointer.toLong())
+            filePointer = logFile.length().toInt()
             this.reader().readLines().forEach {
                 //查看状态
                 //无视前30个无用字符
@@ -55,13 +55,22 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             )
                             if(winState){
                                 winRound++
+                                if(Var.settingBase.difficult.failureDifficultTweak){
+                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtMost(
+                                        Var.settingBase.difficult.minDifficult.coerceAtLeast(Var.nowDifficult + Var.settingBase.difficult.failureDifficultReduce)
+                                    )
+                                    Utility.changeDifficult(client, Var.nowDifficult)
+                                    Utility.sendMessage(client,
+                                        Var.settingBase.difficult.failureDifficultMessage.replace("{0}",
+                                            String.format("%.2f", Var.nowDifficult * 100)))
+                                }
                             }
                             else{
                                 failRound++
                                 if(Var.settingBase.difficult.failureDifficultTweak){
-                                    Var.settingBase.difficult.maxDifficult *= Var.settingBase.difficult.failureDifficultReduce
-                                    Var.settingBase.difficult.minDifficult *= Var.settingBase.difficult.failureDifficultReduce
-                                    Var.nowDifficult *= Var.settingBase.difficult.failureDifficultReduce
+                                    Var.nowDifficult = Var.settingBase.difficult.maxDifficult.coerceAtMost(
+                                        Var.settingBase.difficult.minDifficult.coerceAtLeast(Var.nowDifficult - Var.settingBase.difficult.failureDifficultReduce)
+                                    )
                                     Utility.changeDifficult(client, Var.nowDifficult)
                                     Utility.sendMessage(client,
                                         Var.settingBase.difficult.failureDifficultMessage.replace("{0}",
@@ -70,14 +79,10 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
                             }
                         }
                         tempString.contains("LogChat: Display: ") && tempString.contains(") Global Chat: ") -> {
-                            val tempSaid = tempString.substring(18).split(") Global Chat: ")
-                            var playerSaid = ""
-                            if (tempSaid.size > 2)
-                                for (i in 1..tempSaid.size)
-                                    playerSaid += tempSaid[i]
-                            else
-                                playerSaid = tempSaid[1]
-                            val playerID = tempSaid[0].takeLast(17).toLong()
+                            val regex = Regex("""LogChat: Display:.*\([0-9]+\) Global Chat: """)
+                            val playerSaid = regex.replace(tempString, "")
+                            val playerInfo = regex.find(tempString).toString()
+                            val playerID = playerInfo.substring(playerInfo.length - 46, playerInfo.length - 14).toLong()
                             if (playerSaid.startsWith('!'))
                                 Register.execSaidCommand(client, playerSaid, Var.playerList.getPlayer(playerID))
                         }
@@ -107,13 +112,13 @@ class LogWatcher: BaseRunnable(Var.settingBase.logWatcher.waitTime, true) {
     }
     companion object{
         var gameStatue = GameStatues.Undefine
-        var failRound: Long = 0
-        var winRound: Long = 0
+        var failRound: Int = 0
+        var winRound: Int = 0
         private val logFile = File(Var.settingBase.setting.rootDir + "/Insurgency/Saved/Logs/Insurgency.log")
-        private var filePointer : Long = 0
+        private var filePointer : Int = 0
     }
     init {
         if(logFile.exists())
-            filePointer = logFile.length()
+            filePointer = logFile.length().toInt()
     }
 }

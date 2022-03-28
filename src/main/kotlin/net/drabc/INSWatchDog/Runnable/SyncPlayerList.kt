@@ -10,11 +10,9 @@ class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime, tru
     override suspend fun execute(client: RconClient) {
         getPlayerList(client, Utility.sendCommand(client, "listplayers", true))
     }
-
     private fun trimStr(szTemp: String): String {
         return szTemp.trim().trim('\t')
     }
-
     private fun strToLong(szTemp: String): Long{
         return try{
             trimStr(szTemp).toLong()
@@ -22,7 +20,6 @@ class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime, tru
             0
         }
     }
-
     private fun getPlayerList(client: RconClient, szTemp: String){
         var tempList = szTemp.split('\n')
         if(tempList.size <= 2)
@@ -39,16 +36,13 @@ class SyncPlayerList : BaseRunnable(Var.settingBase.syncPlayerList.waitTime, tru
                     trimStr(tempList[i+3]),
                     strToLong(tempList[i+4])
                 )
-                var kickFlag = false
                 Var.settingBase.ban.banPlayers.forEach {
                     if(it.id == tempPlayer.NetID) {
-                        kickFlag = true
                         Utility.kickPlayer(client, tempPlayer, it.reason)
                         return
                     }
                 }
-                if(!kickFlag)
-                    tempPlayerList.add(tempPlayer)
+                tempPlayerList.add(tempPlayer)
 
             }
         }
